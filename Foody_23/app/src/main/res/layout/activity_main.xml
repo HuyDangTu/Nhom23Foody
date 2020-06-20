@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/RedFoody"
+        android:gravity="center">
+
+        <EditText
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:id="@+id/search_Index"
+            android:layout_width="match_parent"
+            android:layout_height="150px"
+            android:layout_margin="10dp"
+            android:background="@drawable/edit_round_search"
+            android:drawableLeft="@drawable/search"
+            android:drawablePadding="20px"
+            android:hint="Tìm địa điểm, món ăn, địa chỉ,.."
+            android:paddingLeft="25px"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/txtTinhThanh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/search_Index"
+            android:layout_alignRight="@+id/search_Index"
+            android:layout_margin="20dp"
+            android:text="Đồng Nai"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:background="#ffffff"
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+</LinearLayout>

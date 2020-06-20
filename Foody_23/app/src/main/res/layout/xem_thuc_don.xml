@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout4"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/RedFoody">
+        <TextView
+            android:gravity="center"
+            android:id="@+id/txtAnh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="140dp"
+            android:padding="20dp"
+            android:text="Ảnh"
+            android:textColor="#000000"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+        <TextView
+            android:background="@drawable/menu_chosen"
+            android:gravity="center"
+            android:id="@+id/txtThucDon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/txtAnh"
+            android:padding="20dp"
+            android:text="Thực đơn"
+            android:textColor="#000000"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="35dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:padding="7dp"
+            app:srcCompat="@drawable/back" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="Bún Đậu Cô Chang"
+            android:textColor="#9F0202"
+            android:id="@+id/ten_quan_an"
+            android:layout_width="match_parent"
+            android:layout_height="120px"
+            android:background="@drawable/edit_round_search_tinh"
+            android:drawablePadding="20px"
+            android:paddingLeft="25px"
+            android:textSize="20sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ExpandableListView
+            android:layout_marginTop="5dp"
+            android:divider="#E9E9E9"
+            android:dividerHeight="1dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:groupIndicator="@null"
+            android:id="@+id/expandlelistview_thuc_don"/>
+    </RelativeLayout>
+
+</LinearLayout>

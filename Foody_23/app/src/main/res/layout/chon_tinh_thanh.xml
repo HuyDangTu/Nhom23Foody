@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/RedFoody">
+
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/txtChonTinhThanh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chọn Tỉnh thành"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="20dp"/>
+        <TextView
+            android:id="@+id/txtHuyTinhThanh"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hủy"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:padding="20dp"/>
+        <TextView
+            android:id="@+id/txtXongTinhThanh"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xong"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:padding="20dp"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/search_Tinh"
+            android:layout_width="match_parent"
+            android:layout_height="150px"
+            android:layout_margin="10dp"
+            android:background="@drawable/edit_round_search_tinh"
+            android:drawableLeft="@drawable/search"
+            android:drawablePadding="20px"
+            android:hint="Tìm Tỉnh thành"
+            android:paddingLeft="25px"
+            android:textSize="13sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:choiceMode="singleChoice"
+            android:id="@+id/listTinhThanh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+</LinearLayout>

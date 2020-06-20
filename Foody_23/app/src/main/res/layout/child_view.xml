@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:background="@drawable/edit_round_search"
+        android:textColor="#000000"
+        android:text="Món Ăn"
+        android:textSize="18sp"
+        android:paddingLeft="10dp"
+        android:id="@+id/textviewChild"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+    <TextView
+        android:background="@drawable/edit_round_search"
+        android:textColor="#167AD1"
+        android:text="Giá tiền"
+        android:textSize="20sp"
+        android:paddingLeft="10dp"
+        android:id="@+id/textviewChildPrice"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"/>
+</LinearLayout>
