@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ public class TinhThanhActivity extends AppCompatActivity {
     ListView listView;
     TextView txtHuyTinhThanh, txtXongTinhThanh;
     List<TinhThanh> tinhThanhList = new ArrayList<>();
+    AutoCompleteTextView edtTimKiemTinhThanh;
 
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences preferences;
@@ -64,10 +66,16 @@ public class TinhThanhActivity extends AppCompatActivity {
         });
 
 
+        edtTimKiemTinhThanh = findViewById(R.id.search_Tinh);
+
+
+
         // Use Adapter to get data
         tinhThanhList = DatabaseAccess.getInstance(TinhThanhActivity.this).getTinhThanh();
         final TinhThanhAdapter tinhThanhAdapter = new TinhThanhAdapter(TinhThanhActivity.this,tinhThanhList);
         listView.setAdapter(tinhThanhAdapter);
+
+        edtTimKiemTinhThanh.setAdapter(tinhThanhAdapter);
 
         //Check the province which stay in main activity and make it blue
 //        if (savedInstanceState != null){
