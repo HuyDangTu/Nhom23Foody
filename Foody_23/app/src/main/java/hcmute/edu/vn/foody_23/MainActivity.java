@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     TextView txtTinhThanh;
     TextView txtThucDon;
     Cursor cursor;
+    int tinhThanhID = 17;
 
     public static Database database;
 
@@ -41,10 +42,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
 
-        monAnList = DatabaseAccess.getInstance(MainActivity.this).getMonAn();
-        RecycleViewAdapter recycleViewAdapter = new RecycleViewAdapter(this,monAnList);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-        recyclerView.setAdapter(recycleViewAdapter);
 
         // CÁC SỰ KIỆN CLICK
         txtTinhThanh = findViewById(R.id.txtTinhThanh);
@@ -57,10 +54,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Lọc món ăn theo TỈNH
         Intent intent = getIntent();
         String x = intent.getStringExtra("Province");
         if (x != null){
             txtTinhThanh.setText(x);
+            tinhThanhID = DatabaseAccess.getInstance(MainActivity.this).getIdTinhThanh(x);
+            monAnList = DatabaseAccess.getInstance(MainActivity.this).getMonAn(tinhThanhID);
+            RecycleViewAdapter recycleViewAdapter = new RecycleViewAdapter(this,monAnList);
+            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+            recyclerView.setAdapter(recycleViewAdapter);
+        }
+        else {
+            txtTinhThanh.setText("TP HCM");
+            monAnList = DatabaseAccess.getInstance(MainActivity.this).getMonAn(63);
+            RecycleViewAdapter recycleViewAdapter = new RecycleViewAdapter(this,monAnList);
+            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+            recyclerView.setAdapter(recycleViewAdapter);
         }
 
         edtTimKiem = (EditText) findViewById(R.id.search_Index);

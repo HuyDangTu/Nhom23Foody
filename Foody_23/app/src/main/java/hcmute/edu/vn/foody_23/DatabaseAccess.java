@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.media.Image;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,12 +63,12 @@ public class DatabaseAccess {
      * @return a List of quotes
      */
 
-    public List<MonAn> getMonAn() {
+    public List<MonAn> getMonAn(int IdTinhThanh) {
         List<MonAn> list = new ArrayList<>();
         database = openHelper.getReadableDatabase();
-        Cursor cursor = database.rawQuery("select Store.Id,Store.Description,Store.Name," +
-                "Image.HinhAnh from Store inner join Image on Image.Store_Id = Store.Id where " +
-                "Image.Kieuhinhanh ='thumb'", null);
+        Cursor cursor = database.rawQuery("select Store.Id, Store.Description, Store.Name, Image.HinhAnh " +
+                " from Store inner join Image on Image.Store_Id = Store.Id inner join Province on Store.Province_Id = Province.Id " +
+                " where Image.Kieuhinhanh = 'thumb' and Store.Province_Id = " + "'"+IdTinhThanh+"'", null);
          cursor.moveToFirst();
         list.clear();
             while (!cursor.isAfterLast()) {
@@ -171,5 +172,16 @@ public class DatabaseAccess {
         }
         cursor.close();
         return tinhThanhList;
+    }
+    // Lấy ID Tỉnh theo tên
+    int getIdTinhThanh(String TenTinhThanh){
+        int tinhThanhID = 0;
+        database = openHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery("select Id" +
+                " from Province where Province.Ten =" + "'"+TenTinhThanh+"'" , null);
+        cursor.moveToFirst();
+        tinhThanhID = cursor.getInt(0);
+        cursor.close();
+        return tinhThanhID;
     }
 }

@@ -36,7 +36,7 @@ public class TinhThanhActivity extends AppCompatActivity {
     public static final String MyPREFERENCES = "MyPrefs" ;
     SharedPreferences preferences;
     String flag = "";
-    int c = 100;
+    int c = 63;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
