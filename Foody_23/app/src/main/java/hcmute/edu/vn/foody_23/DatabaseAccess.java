@@ -84,12 +84,12 @@ public class DatabaseAccess {
         return list;
     }
 
-    public List<CuaHang> timKiemQuanAn(String keyWord) {
+    public List<CuaHang> timKiemQuanAn(String keyWord,int provinceId) {
         List<CuaHang> list = new ArrayList<>();
         database = openHelper.getReadableDatabase();
         Cursor cursor = database.rawQuery("select Store.Id,Store.Name,Store.Address,Store.type,Store.score,Store.comment,Image.HinhAnh " +
                 "from Store inner join Image on Image.Store_Id = Store.Id where " +
-                "Image.Kieuhinhanh ='thumb' and Store.Name like "+ "'%"+keyWord+"%'", null);
+                "Image.Kieuhinhanh ='thumb' and Store.Province_Id = "+provinceId+" and Store.Name like "+"'%"+keyWord+"%'", null);
         cursor.moveToFirst();
         list.clear();
         while (!cursor.isAfterLast()) {
@@ -109,12 +109,12 @@ public class DatabaseAccess {
         return list;
     }
 
-    public List<CuaHang> timKiemQuanAnPhoBien(String keyWord) {
+    public List<CuaHang> timKiemQuanAnPhoBien(String keyWord,int provinceId) {
         List<CuaHang> list = new ArrayList<>();
         database = openHelper.getReadableDatabase();
         Cursor cursor = database.rawQuery("select Store.Id,Store.Name,Store.Address,Store.type,Store.score,Store.comment, "+
                 "Image.HinhAnh from Store inner join Image on Image.Store_Id = Store.Id where Image.Kieuhinhanh ='thumb' and "+
-                "Store.Name like '%"+keyWord+"%' order by Store.score desc",null);
+                "Store.Province_Id = "+provinceId + " and Store.Name like '%"+keyWord+"%' order by Store.score desc",null);
         cursor.moveToFirst();
         list.clear();
         while (!cursor.isAfterLast()) {
@@ -133,12 +133,12 @@ public class DatabaseAccess {
         cursor.close();
         return list;
     }
-    public List<CuaHang> timKiemQuanAnGanDay(String keyWord) {
+    public List<CuaHang> timKiemQuanAnGanDay(String keyWord,int provinceId) {
         List<CuaHang> list = new ArrayList<>();
         database = openHelper.getReadableDatabase();
         Cursor cursor = database.rawQuery("select Store.Id,Store.Name,Store.Address,Store.type,Store.score,Store.comment, "+
                 "Image.HinhAnh from Store inner join Image on Image.Store_Id = Store.Id where Image.Kieuhinhanh ='thumb' and "+
-                "Store.Name like '%"+keyWord+"%' order by Store.score desc",null);
+                "Store.Province_Id = "+provinceId+ " and Store.Name like '%"+keyWord+"%' order by Store.score desc",null);
         cursor.moveToFirst();
         list.clear();
         while (!cursor.isAfterLast()) {

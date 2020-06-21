@@ -26,7 +26,10 @@ public class SearchActivity extends AppCompatActivity {
 
     CardView cardView;
     List<CuaHang> CuaHangList;
+    int provinceId;
+    String keyWord;
     EditText edtTimKiem;
+    TextView txtViewTinhThanh;
     ImageView backBtn;
     Button defaultBtn,popularBtn,nearBtn;
     public static Database database;
@@ -37,9 +40,14 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.search_activity);
         CuaHangList = new ArrayList<>();
         Intent intent = getIntent();
-        String keyWord = intent.getStringExtra("Keyword");
+        txtViewTinhThanh = (TextView) findViewById(R.id.txtTinhThanh);
+
+        keyWord = intent.getStringExtra("Keyword");
+        provinceId = intent.getIntExtra("provinceId",-1);
+        txtViewTinhThanh.setText("Địa điểm ở "+intent.getStringExtra("provinceName"));
+
         //tìm cua hang theo input từ input từ main activity
-        CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord);
+        CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord,provinceId);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ResultRecyclerView);
         SeachResultRecycleViewAdapter recycleViewAdapter = new SeachResultRecycleViewAdapter(SearchActivity.this,CuaHangList);
@@ -62,7 +70,7 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String keyWord = edtTimKiem.getText().toString();
-                    CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord);
+                    CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord,provinceId);
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ResultRecyclerView);
                     SeachResultRecycleViewAdapter recycleViewAdapter = new SeachResultRecycleViewAdapter(SearchActivity.this,CuaHangList);
                     recyclerView.setLayoutManager(new GridLayoutManager(SearchActivity.this,1));
@@ -80,7 +88,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String keyWord = edtTimKiem.getText().toString();
-                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord);
+                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord,provinceId);
                 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ResultRecyclerView);
                 SeachResultRecycleViewAdapter recycleViewAdapter = new SeachResultRecycleViewAdapter(SearchActivity.this,CuaHangList);
                 recyclerView.setLayoutManager(new GridLayoutManager(SearchActivity.this,1));
@@ -91,7 +99,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String keyWord = edtTimKiem.getText().toString();
-                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAnPhoBien(keyWord);
+                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAnPhoBien(keyWord,provinceId);
                 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ResultRecyclerView);
                 SeachResultRecycleViewAdapter recycleViewAdapter = new SeachResultRecycleViewAdapter(SearchActivity.this,CuaHangList);
                 recyclerView.setLayoutManager(new GridLayoutManager(SearchActivity.this,1));
@@ -102,7 +110,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String keyWord = edtTimKiem.getText().toString();
-                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord);
+                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord,provinceId);
                 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ResultRecyclerView);
                 SeachResultRecycleViewAdapter recycleViewAdapter = new SeachResultRecycleViewAdapter(SearchActivity.this,CuaHangList);
                 recyclerView.setLayoutManager(new GridLayoutManager(SearchActivity.this,1));

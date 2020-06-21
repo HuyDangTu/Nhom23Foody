@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     TextView txtTinhThanh;
     TextView txtThucDon;
     Cursor cursor;
-    int tinhThanhID = 17;
+    int tinhThanhID = 63;
 
     public static Database database;
 
@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     Intent intent = new Intent(MainActivity.this,SearchActivity.class);
                     intent.putExtra("Keyword",edtTimKiem.getText().toString());
+                    intent.putExtra("provinceId",tinhThanhID);
+                    intent.putExtra("provinceName",txtTinhThanh.getText().toString());
                     startActivity(intent);
                     return true;
                 }

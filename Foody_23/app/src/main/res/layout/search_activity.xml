@@ -44,13 +44,13 @@
             android:background="@drawable/edit_round_search"
             android:drawableLeft="@drawable/search"
             android:drawablePadding="20px"
-            android:hint="Tìm địa điểm, món ăn, địa chỉ,.."
+            android:hint="Tìm địa điểm, món ăn,..."
             android:padding="5dp"
             android:textSize="13sp" />
 
         <TextView
             android:id="@+id/txtTinhThanh"
-            android:layout_width="81dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/search_Index"
             android:layout_alignTop="@+id/searchBox"
@@ -59,12 +59,13 @@
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="14dp"
-            android:layout_marginEnd="1dp"
-            android:layout_marginRight="1dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginRight="7dp"
             android:layout_marginBottom="20dp"
             android:text="Đồng Nai"
+
             android:textColor="#000000"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
 
