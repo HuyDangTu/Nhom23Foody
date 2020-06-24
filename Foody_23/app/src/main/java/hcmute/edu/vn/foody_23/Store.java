@@ -13,12 +13,23 @@ public class Store {
     private String OpenTime;
     private String wifi_name;
     private String wifi_Password;
+    private String PhoneNum;
+
+    public String getCloseTime() {
+        return CloseTime;
+    }
+
+    public void setCloseTime(String closeTime) {
+        CloseTime = closeTime;
+    }
+
+    private String CloseTime;
 
     public Store(){
 
     }
 
-    public Store(Integer id, String address, String name, String description, Integer province_Id, String openTime, String wifi_name, String wifi_Password) {
+    public Store(Integer id, String address, String name, String description, Integer province_Id, String openTime, String wifi_name, String wifi_Password,String PhoneNum, String closeTime) {
         this.id = id;
         Address = address;
         Name = name;
@@ -27,6 +38,8 @@ public class Store {
         OpenTime = openTime;
         this.wifi_name = wifi_name;
         this.wifi_Password = wifi_Password;
+        this.PhoneNum = PhoneNum;
+        CloseTime = closeTime;
     }
 
     public Integer getId() {
@@ -61,6 +74,7 @@ public class Store {
     public String getWifi_Password() {
         return wifi_Password;
     }
+    public String getPhoneNum() { return PhoneNum; }
 
     public void setId(Integer id) {
         this.id = id;
@@ -94,5 +108,8 @@ public class Store {
     public void setWifi_Password(String wifi_Password) {
         this.wifi_Password = wifi_Password;
     }
+
+
+    public void setPhoneNum(String PhoneNum) { this.PhoneNum = PhoneNum; }
 }
 

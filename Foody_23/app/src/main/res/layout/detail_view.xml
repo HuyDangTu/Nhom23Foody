@@ -123,18 +123,18 @@
         android:layout_height="wrap_content"
         android:text="126 Hồng Bàng, Phường 12, Quận 5, Hồ Chí Minh, Việt Nam">
     </TextView>
+
     <TextView
-        android:textStyle="bold"
-        android:drawableLeft="@drawable/circle"
-        android:drawablePadding="8dp"
-        android:paddingTop="16dp"
-        android:textColor="@android:color/holo_green_dark"
-        android:layout_below="@id/DiaChi"
         android:id="@+id/KhoangCach"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="4km (từ vị trí hiện tại)">
-    </TextView>
+        android:layout_below="@id/DiaChi"
+        android:drawableLeft="@drawable/circle"
+        android:drawablePadding="8dp"
+        android:paddingTop="16dp"
+        android:text="Đang tính toán khoảng cách"
+        android:textColor="@android:color/holo_green_dark"
+        android:textStyle="bold"></TextView>
     <TextView
         android:drawableLeft="@drawable/food"
         android:paddingTop="16dp"

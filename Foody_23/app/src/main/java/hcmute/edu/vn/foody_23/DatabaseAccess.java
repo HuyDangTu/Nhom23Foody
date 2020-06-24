@@ -184,4 +184,23 @@ public class DatabaseAccess {
         cursor.close();
         return tinhThanhID;
     }
+    public Store getStore(String key)
+    {
+        database = openHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery ("select * from Store where Store.Id= "+String.valueOf ( key ), null);
+        cursor.moveToFirst ();
+        int StId = cursor.getInt ( 0 );
+        String StAddress = cursor.getString ( 1 );
+        String StName = cursor.getString ( 2 );
+        String StDes = cursor.getString ( 3 );
+        int StProvince = cursor.getInt ( 4 );
+        String StOpentime = cursor.getString ( 5 );
+        String StWifiname = cursor.getString ( 6 );
+        String StWifipass = cursor.getString ( 7 );
+        String StNum = cursor.getString ( 11 );
+        String StClose = cursor.getString ( 12 );
+        Store QuanAn = new Store(StId,StAddress,StName,StDes,StProvince,StOpentime,StWifiname,StWifipass,StNum,StClose);
+        cursor.close ();
+        return QuanAn;
+    }
 }
