@@ -1,6 +1,7 @@
 package hcmute.edu.vn.foody_23;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -15,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.ContentView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,8 +28,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -61,6 +66,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     TextView txtDiaChi;
     TextView txtTenQuan;
     TextView txtProvince;
+    TextView txtWifi;
     Store Quanan;
     Button BtnContact;
     ///////// LOCATION
@@ -73,11 +79,12 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     String provider;
     protected String latitude, longitude;
     protected boolean gps_enabled, network_enabled;
+    public String key;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent ();
-        String key = intent.getExtras ().getString ( "CurrentStore" );
+        key = intent.getExtras ().getString ( "CurrentStore" );
         super.onCreate ( savedInstanceState );
         setContentView ( R.layout.detail_view );
         Quanan = DatabaseAccess.getInstance ( DetailActivity.this ).getStore ( key );
@@ -99,7 +106,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         txtProvince = (TextView) findViewById ( R.id.txtDiaChi );
         txtisOpen = (TextView) findViewById ( R.id.textOpen );
         BtnContact = (Button) findViewById ( R.id.Contact ) ;
-
+        txtWifi = (TextView) findViewById ( R.id.wifiactionicon );
 
         textView = (TextView) findViewById ( R.id.menutab );
         txtDiaChi.setText ( Quanan.getAddress () );
@@ -121,7 +128,12 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
                 startActivity ( intent );
             }
         } );
-
+        txtWifi.setOnClickListener ( new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+                DialogWifi();
+            }
+        } );
         textView.setOnClickListener ( new View.OnClickListener () {
             @Override
             public void onClick(View v) {
@@ -130,6 +142,28 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
             }
         } );
     }
+
+    private void DialogWifi() {
+        final Dialog dialog = new Dialog ( this );
+        dialog.setContentView ( R.layout.wifi_dialog );
+        TextView txtWifiName = (TextView) dialog.findViewById ( R.id.WifiName );
+        TextView txtWifiPass=(TextView) dialog.findViewById ( R.id.WifiPass );
+
+        txtWifiName.setText ( Quanan.getWifi_name () );
+        txtWifiPass.setText ( Quanan.getWifi_Password () );
+        txtWifiPass.setTransformationMethod ( HideReturnsTransformationMethod.getInstance () );
+        dialog.show ();
+        Window window = dialog.getWindow();
+        window.setLayout( GridLayoutManager.LayoutParams.MATCH_PARENT, GridLayoutManager.LayoutParams.WRAP_CONTENT);
+        Button submit = (Button) dialog.findViewById ( R.id.submitwifi );
+        submit.setOnClickListener ( new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+               dialog.cancel ();
+            }
+        } );
+    }
+
     ///  TÍNH GIỜ MỞ CỦA
     private void CompareTime(String Open, String Close) throws ParseException {
         Calendar now = Calendar.getInstance();

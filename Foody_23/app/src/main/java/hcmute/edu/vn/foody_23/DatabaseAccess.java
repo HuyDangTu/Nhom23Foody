@@ -203,4 +203,10 @@ public class DatabaseAccess {
         cursor.close ();
         return QuanAn;
     }
+//    public Store UpdateWifi(String key, String pass)
+//    {
+//        database = openHelper.getWritableDatabase ();
+//        database.rawQuery ( "update Wifi_password from Store where Store.Id= "+String.valueOf ( key ),null );
+//        return null;
+//    }
 }
