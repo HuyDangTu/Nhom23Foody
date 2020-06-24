@@ -52,6 +52,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             e.printStackTrace();
         }
         holder.book_thumb.setImageBitmap(image);
+        holder.cardView.setOnClickListener ( new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent (mContext,DetailActivity.class );
+                intent.putExtra("CurrentStore", String.valueOf (mData.get ( position ).getId ()));
+                mContext.startActivity ( intent);
+            }
+        } );
     }
     @Override
     public int getItemCount() {

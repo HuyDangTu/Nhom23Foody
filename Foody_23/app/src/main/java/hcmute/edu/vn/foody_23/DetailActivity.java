@@ -6,7 +6,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -28,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Layout;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -36,10 +40,14 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -50,13 +58,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import static java.lang.Math.asin;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.sqrt;
-import static java.lang.Math.toRadians;
-
 public class DetailActivity extends AppCompatActivity implements LocationListener {
 
 
@@ -83,8 +84,10 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         Intent intent = getIntent ();
         key = intent.getExtras ().getString ( "CurrentStore" );
+
         super.onCreate ( savedInstanceState );
         setContentView ( R.layout.detail_view );
         Quanan = DatabaseAccess.getInstance ( DetailActivity.this ).getStore ( key );
@@ -146,8 +149,8 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     private void DialogWifi() {
         final Dialog dialog = new Dialog ( this );
         dialog.setContentView ( R.layout.wifi_dialog );
-        TextView txtWifiName = (TextView) dialog.findViewById ( R.id.WifiName );
-        TextView txtWifiPass=(TextView) dialog.findViewById ( R.id.WifiPass );
+        final TextView txtWifiName = (TextView) dialog.findViewById ( R.id.WifiName );
+        final TextView txtWifiPass=(TextView) dialog.findViewById ( R.id.WifiPass );
 
         txtWifiName.setText ( Quanan.getWifi_name () );
         txtWifiPass.setText ( Quanan.getWifi_Password () );
@@ -159,6 +162,11 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         submit.setOnClickListener ( new View.OnClickListener () {
             @Override
             public void onClick(View v) {
+
+//                   Toast.makeText ( DetailActivity.this,"Mật khẩu không hợp lệ",Toast.LENGTH_SHORT ).show ();
+//
+            DatabaseAccess.getInstance ( DetailActivity.this ).UpdateWifi ( key,txtWifiPass.getText ().toString () );
+
                dialog.cancel ();
             }
         } );
@@ -170,24 +178,26 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         int NowHour = now.get(Calendar.HOUR_OF_DAY);
         int NowMinute = now.get(Calendar.MINUTE);
+
         int OpenTime = Integer.parseInt ( Open.replaceAll ( "\\D+","" ));
         int CloseTime = Integer.parseInt ( Close.replaceAll ( "\\D+","" ) );
         String Now = Integer.toString ( NowHour ) + Integer.toString ( NowMinute );
         int RightNow = Integer.parseInt ( Now );
         if ( RightNow > OpenTime && RightNow < CloseTime) {
-            txtisOpen.setText ( "ĐANG MỞ CỬA" + " " );
+            txtisOpen.setText ( "ĐANG MỞ CỬA" );
             txtisOpen.setTextColor ( Color.BLACK);
         }
         else {
-            txtisOpen.setText ( "ĐÃ ĐÓNG CỬA" + " ");
+            txtisOpen.setText ( "ĐÃ ĐÓNG CỬA"  );
         }
 
     }
     /// TÍNH KHOẢNG CÁCH
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onLocationChanged(Location location) {
         txtLat = (TextView) findViewById ( R.id.KhoangCach );
-        txtLat.setText ( location.getLatitude ()+"-"+location.getLongitude (  ) );
+//        txtLat.setText ( location.getLatitude ()+"-"+location.getLongitude (  ) );
         Geocoder geocoder = new Geocoder(DetailActivity.this,Locale.getDefault ());
         try {
             List addressList = geocoder.getFromLocationName(Quanan.getAddress (), 1);
@@ -204,17 +214,35 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
             locationB.setLongitude(location.getLongitude ());
 
             Double distance = Double.valueOf ( locationA.distanceTo(locationB)/1000);
-//            List addressList2 = geocoder.getFromLocation (destination.getLatitude (),destination.getLongitude (),1);
-//            Address diachi = (Address) addressList2.get ( 0 );
-//String Add = diachi.toString ();
+//            RelativeLayout detailLayout = (RelativeLayout) findViewById ( R.id.relativeLay.out6 );
+//            String url = "http://maps.google.com/maps/api/staticmap?center=" + destination.getLatitude () + "," + destination.getLongitude () + "&zoom=15&size=200x200&sensor=false&key=AIzaSyAyYhjRiaVj5QCwb37NNh4LUipClZMxmD0";
+//            Bitmap bitmap = getBitmapFromURL ( url );
+//            BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
+//            detailLayout.setBackground ( ob );
 
             txtLat.setText (String.format ( "%.2f",distance)+" km "+"từ vị trí hiện tại");
         }
         catch (IOException e) {
             e.printStackTrace ();
+
         }
     }
 
+
+//    public static Bitmap getBitmapFromURL(String src) {
+//        try {
+//            URL url = new URL(src);
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//            connection.setDoInput(true);
+//            connection.connect();
+//            InputStream input = connection.getInputStream();
+//            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+//            return myBitmap;
+//        } catch (IOException e) {
+//            // Log exception
+//            return null;
+//        }
+//    }
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         Log.d("Latitude","disable");

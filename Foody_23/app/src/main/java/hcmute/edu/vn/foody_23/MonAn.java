@@ -5,10 +5,21 @@ public class MonAn {
     private String Description;
     private String Thumbnail;
 
-    public MonAn(String title, String description,String thumbnail) {
+    public int getId() {
+        return Id;
+    }
+
+    public void setId(int id) {
+        Id = id;
+    }
+
+    private int Id;
+
+    public MonAn(String title, String description,String thumbnail, int id) {
         Title = title;
         Description = description;
         Thumbnail = thumbnail;
+        Id = id;
     }
 
     public MonAn() {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.media.Image;
 
 import java.util.ArrayList;
@@ -76,7 +77,8 @@ public class DatabaseAccess {
                 String Desc = cursor.getString(1);
                 String Name = cursor.getString(2);
                 String Img = cursor.getString(3);
-                MonAn monAn = new MonAn(Name, Desc, Img);
+                int ID = cursor.getInt ( 0 );
+                MonAn monAn = new MonAn(Name, Desc, Img,ID);
                 list.add(monAn);
                 cursor.moveToNext();
             }
@@ -173,6 +175,7 @@ public class DatabaseAccess {
         cursor.close();
         return tinhThanhList;
     }
+
     // Lấy ID Tỉnh theo tên
     int getIdTinhThanh(String TenTinhThanh){
         int tinhThanhID = 0;
@@ -184,6 +187,7 @@ public class DatabaseAccess {
         cursor.close();
         return tinhThanhID;
     }
+
     public Store getStore(String key)
     {
         database = openHelper.getReadableDatabase();
@@ -203,10 +207,11 @@ public class DatabaseAccess {
         cursor.close ();
         return QuanAn;
     }
-//    public Store UpdateWifi(String key, String pass)
-//    {
-//        database = openHelper.getWritableDatabase ();
-//        database.rawQuery ( "update Wifi_password from Store where Store.Id= "+String.valueOf ( key ),null );
-//        return null;
-//    }
+    public void UpdateWifi(String key, String pass)
+    {
+        database = openHelper.getWritableDatabase ();
+        String Query = "UPDATE Store SET Wifi_password='"+ pass+"' WHERE Store.Id= " +String.valueOf (key);
+        SQLiteStatement statement = database.compileStatement ( Query );
+        statement.execute ();
+    }
 }

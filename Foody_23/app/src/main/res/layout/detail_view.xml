@@ -108,6 +108,7 @@
         android:background="@android:color/darker_gray"/>
 <RelativeLayout
     android:padding="16dp"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/relativeLayout6"
