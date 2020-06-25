@@ -121,7 +121,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp"/>
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/gradient_background">
     <TextView
         android:padding="7dp"
         android:drawableLeft="@drawable/marker"
@@ -167,7 +170,7 @@
         android:drawablePadding="8dp"
 
         android:text="1000đ-30000đ"></TextView>
-
+    </RelativeLayout>
 </RelativeLayout>
     <View
         android:layout_width="fill_parent"
