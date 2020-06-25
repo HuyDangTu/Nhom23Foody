@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.Layout;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -43,6 +44,17 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -70,6 +82,8 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     TextView txtWifi;
     Store Quanan;
     Button BtnContact;
+    GoogleMap map;
+
     ///////// LOCATION
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     protected LocationManager locationManager;
@@ -101,6 +115,11 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
             return;
         }
         locationManager.requestLocationUpdates ( LocationManager.GPS_PROVIDER, 0, 0, this );
+
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.myMaps);
+        mapFragment.getMapAsync((OnMapReadyCallback) this);
+
 
 /// ÁNH XẠ
         txtDiaChi = (TextView) findViewById ( R.id.DiaChi );
@@ -156,6 +175,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         txtWifiPass.setText ( Quanan.getWifi_Password () );
         txtWifiPass.setTransformationMethod ( HideReturnsTransformationMethod.getInstance () );
         dialog.show ();
+
         Window window = dialog.getWindow();
         window.setLayout( GridLayoutManager.LayoutParams.MATCH_PARENT, GridLayoutManager.LayoutParams.WRAP_CONTENT);
         Button submit = (Button) dialog.findViewById ( R.id.submitwifi );
@@ -163,7 +183,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
             @Override
             public void onClick(View v) {
 
-//                   Toast.makeText ( DetailActivity.this,"Mật khẩu không hợp lệ",Toast.LENGTH_SHORT ).show ();
+//      Toast.makeText ( DetailActivity.this,"Mật khẩu không hợp lệ",Toast.LENGTH_SHORT ).show ();
 //
             DatabaseAccess.getInstance ( DetailActivity.this ).UpdateWifi ( key,txtWifiPass.getText ().toString () );
 
@@ -171,7 +191,6 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
             }
         } );
     }
-
     ///  TÍNH GIỜ MỞ CỦA
     private void CompareTime(String Open, String Close) throws ParseException {
         Calendar now = Calendar.getInstance();
@@ -190,8 +209,8 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         else {
             txtisOpen.setText ( "ĐÃ ĐÓNG CỬA"  );
         }
-
     }
+
     /// TÍNH KHOẢNG CÁCH
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -243,11 +262,55 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
 //            return null;
 //        }
 //    }
+
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        LocationServices.getFusedLocationProviderClient(DetailActivity.this)
+                .requestLocationUpdates(locationRequest, new LocationCallback(){
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+                        LocationServices.getFusedLocationProviderClient(DetailActivity.this)
+                                .removeLocationUpdates(this);
+                        if(locationResult != null && locationResult.getLocations().size()>0){
+                            int latestLocationIndex = locationResult.getLocations().size() - 1;
+                            ////////////////////////////////
+//                            double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
+//                            double longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
+                            Location locationA = null;
+                                Geocoder geocoder = new Geocoder(DetailActivity.this,Locale.getDefault ());
+                                try {
+                                    List addressList = geocoder.getFromLocationName(Quanan.getAddress(), 1);
+
+                                    Address destination = (Address) addressList.get(0);
+                                    locationA = new Location("point A");
+                                    locationA.setLatitude(destination.getLatitude());
+                                    locationA.setLongitude(destination.getLongitude());
+                                }
+                                catch (IOException e) {
+                                    e.printStackTrace ();
+                                }
+                                double latitude = locationA.getLatitude();
+                                double longitude =  locationA.getLongitude();
+                                LatLng position = new LatLng(latitude, longitude);
+                                map.addMarker(new MarkerOptions().position(position)
+                                        .title(Quanan.getName()));
+                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(position,17));
+                        }
+                    }
+                }, Looper.getMainLooper());
+        // Add a marker in Sydney, Australia,
+        // and move the map's camera to the same location.
+    }
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
         Log.d("Latitude","disable");
     }
-
     @Override
     public void onProviderEnabled(String provider) {
         Log.d("Latitude","enable");

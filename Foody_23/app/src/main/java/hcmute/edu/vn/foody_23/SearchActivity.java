@@ -7,7 +7,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Database;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,6 +37,31 @@ public class SearchActivity extends AppCompatActivity {
     ImageView backBtn;
     Button defaultBtn,popularBtn,nearBtn;
     public static Database database;
+    private static final float LOCATION_REFRESH_DISTANCE = 100 ;
+    private static final long LOCATION_REFRESH_TIME = 1;
+    Location currentLocation;
+
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            //your code here
+            currentLocation = location;
+        }
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -45,6 +74,10 @@ public class SearchActivity extends AppCompatActivity {
         keyWord = intent.getStringExtra("Keyword");
         provinceId = intent.getIntExtra("provinceId",-1);
         txtViewTinhThanh.setText("Địa điểm ở "+intent.getStringExtra("provinceName"));
+
+        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
+                LOCATION_REFRESH_DISTANCE, mLocationListener);
 
         //tìm cua hang theo input từ input từ main activity
         CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord,provinceId);
@@ -70,7 +103,7 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String keyWord = edtTimKiem.getText().toString();
-                    CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord,provinceId);
+                    CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAnMacDinh(keyWord,provinceId,SearchActivity.this,currentLocation);
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ResultRecyclerView);
                     SeachResultRecycleViewAdapter recycleViewAdapter = new SeachResultRecycleViewAdapter(SearchActivity.this,CuaHangList);
                     recyclerView.setLayoutManager(new GridLayoutManager(SearchActivity.this,1));
@@ -79,7 +112,7 @@ public class SearchActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+//////////////////CLICK EVENT
         defaultBtn = (Button) findViewById(R.id.defaultBtn);
         popularBtn = (Button) findViewById(R.id.popularBtn);
         nearBtn = (Button) findViewById(R.id.nearBtn);
@@ -88,7 +121,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String keyWord = edtTimKiem.getText().toString();
-                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord,provinceId);
+                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAnMacDinh(keyWord,provinceId,SearchActivity.this,currentLocation);
                 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ResultRecyclerView);
                 SeachResultRecycleViewAdapter recycleViewAdapter = new SeachResultRecycleViewAdapter(SearchActivity.this,CuaHangList);
                 recyclerView.setLayoutManager(new GridLayoutManager(SearchActivity.this,1));
@@ -99,7 +132,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String keyWord = edtTimKiem.getText().toString();
-                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAnPhoBien(keyWord,provinceId);
+                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAnPhoBien(keyWord,provinceId,SearchActivity.this,currentLocation);
                 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ResultRecyclerView);
                 SeachResultRecycleViewAdapter recycleViewAdapter = new SeachResultRecycleViewAdapter(SearchActivity.this,CuaHangList);
                 recyclerView.setLayoutManager(new GridLayoutManager(SearchActivity.this,1));
@@ -110,7 +143,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String keyWord = edtTimKiem.getText().toString();
-                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord,provinceId);
+                CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAnGanDay(keyWord,provinceId,SearchActivity.this,currentLocation);
                 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ResultRecyclerView);
                 SeachResultRecycleViewAdapter recycleViewAdapter = new SeachResultRecycleViewAdapter(SearchActivity.this,CuaHangList);
                 recyclerView.setLayoutManager(new GridLayoutManager(SearchActivity.this,1));

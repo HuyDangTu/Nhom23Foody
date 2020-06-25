@@ -5,12 +5,20 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.media.Image;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class DatabaseAccess {
+public class DatabaseAccess  {
     private SQLiteOpenHelper openHelper;
     private SQLiteDatabase database;
     private static DatabaseAccess instance;
@@ -111,7 +119,33 @@ public class DatabaseAccess {
         return list;
     }
 
-    public List<CuaHang> timKiemQuanAnPhoBien(String keyWord,int provinceId) {
+    public List<CuaHang> timKiemQuanAnMacDinh(String keyWord, int provinceId, Context context, Location location) {
+        List<CuaHang> list = new ArrayList<>();
+        database = openHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery("select Store.Id,Store.Name,Store.Address,Store.type,Store.score,Store.comment,Image.HinhAnh " +
+                "from Store inner join Image on Image.Store_Id = Store.Id where " +
+                "Image.Kieuhinhanh ='thumb' and Store.Province_Id = "+provinceId+" and Store.Name like "+"'%"+keyWord+"%'", null);
+        cursor.moveToFirst();
+        list.clear();
+        while (!cursor.isAfterLast()) {
+            String Id = String.valueOf(cursor.getInt(0));
+            String Name = cursor.getString(1);
+            String Address = cursor.getString(2);
+            String distance = String.format ( "%.2f",DistanceCalculation(context,Address,location));
+            //Toast.makeText(context,String.valueOf(distance),Toast.LENGTH_SHORT).show();
+            String type = cursor.getString(3);
+            String score = cursor.getString(4);
+            String comment = String.valueOf(cursor.getInt(5));
+            String Img = cursor.getString(6);
+            CuaHang cuaHang = new CuaHang(Id,Name,Address,distance,"9",comment,Img,score,type);
+            list.add(cuaHang);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+    }
+
+    public List<CuaHang> timKiemQuanAnPhoBien(String keyWord,int provinceId,Context context,Location location) {
         List<CuaHang> list = new ArrayList<>();
         database = openHelper.getReadableDatabase();
         Cursor cursor = database.rawQuery("select Store.Id,Store.Name,Store.Address,Store.type,Store.score,Store.comment, "+
@@ -123,11 +157,12 @@ public class DatabaseAccess {
             String Id = String.valueOf(cursor.getInt(0));
             String Name = cursor.getString(1);
             String Address = cursor.getString(2);
+            String distance = String.format ( "%.2f",DistanceCalculation(context,Address,location));
             String type = cursor.getString(3);
             String score = cursor.getString(4);
             String comment = String.valueOf(cursor.getInt(5));
             String Img = cursor.getString(6);
-            CuaHang cuaHang = new CuaHang(Id,Name,Address,"8","9",comment,Img,score,type);
+            CuaHang cuaHang = new CuaHang(Id,Name,Address,distance,"9",comment,Img,score,type);
 
             list.add(cuaHang);
             cursor.moveToNext();
@@ -135,7 +170,8 @@ public class DatabaseAccess {
         cursor.close();
         return list;
     }
-    public List<CuaHang> timKiemQuanAnGanDay(String keyWord,int provinceId) {
+
+    public List<CuaHang> timKiemQuanAnGanDay(String keyWord,int provinceId,Context context,Location location) {
         List<CuaHang> list = new ArrayList<>();
         database = openHelper.getReadableDatabase();
         Cursor cursor = database.rawQuery("select Store.Id,Store.Name,Store.Address,Store.type,Store.score,Store.comment, "+
@@ -144,16 +180,18 @@ public class DatabaseAccess {
         cursor.moveToFirst();
         list.clear();
         while (!cursor.isAfterLast()) {
-            String Id = String.valueOf(cursor.getInt(0));
-            String Name = cursor.getString(1);
             String Address = cursor.getString(2);
-            String type = cursor.getString(3);
-            String score = cursor.getString(4);
-            String comment = String.valueOf(cursor.getInt(5));
-            String Img = cursor.getString(6);
-            CuaHang cuaHang = new CuaHang(Id,Name,Address,"8","9",comment,Img,score,type);
-
-            list.add(cuaHang);
+            Double distance = DistanceCalculation(context,Address,location);
+            if(distance<5) {
+                String Id = String.valueOf(cursor.getInt(0));
+                String Name = cursor.getString(1);
+                String type = cursor.getString(3);
+                String score = cursor.getString(4);
+                String comment = String.valueOf(cursor.getInt(5));
+                String Img = cursor.getString(6);
+                CuaHang cuaHang = new CuaHang(Id, Name, Address, String.format ( "%.2f",distance), "9", comment, Img, score, type);
+                list.add(cuaHang);
+            }
             cursor.moveToNext();
         }
         cursor.close();
@@ -213,5 +251,31 @@ public class DatabaseAccess {
         String Query = "UPDATE Store SET Wifi_password='"+ pass+"' WHERE Store.Id= " +String.valueOf (key);
         SQLiteStatement statement = database.compileStatement ( Query );
         statement.execute ();
+    }
+
+    public Double DistanceCalculation(Context mConText,String Address,Location location)
+    {
+        Double distance = Double.valueOf(0.000);
+        Geocoder geocoder = new Geocoder(mConText, Locale.getDefault ());
+        try {
+            List addressList = geocoder.getFromLocationName(Address, 1);
+            android.location.Address destination = (Address) addressList.get ( 0 ) ;
+            Location locationA = new Location("point A");
+
+            locationA.setLatitude(destination.getLatitude ());
+            locationA.setLongitude(destination.getLongitude ());
+
+            Location locationB = new Location("point B");
+            locationB.setLatitude(location.getLatitude ());
+            locationB.setLongitude(location.getLongitude ());
+
+            distance = Double.valueOf ( locationA.distanceTo(locationB)/1000);
+            return distance;
+
+        }
+        catch (IOException e) {
+            e.printStackTrace ();
+            return distance;
+        }
     }
 }
