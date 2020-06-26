@@ -252,7 +252,21 @@ public class DatabaseAccess  {
         SQLiteStatement statement = database.compileStatement ( Query );
         statement.execute ();
     }
-
+    public List<String> GetImage (String key)
+    {
+        List<String> listImage = new ArrayList<> (  );
+        database = openHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery("select * from Image where Image.Store_Id ="+String.valueOf ( key ), null);
+        cursor.moveToFirst();
+        listImage.clear ();
+        while (!cursor.isAfterLast ()) {
+            String item = cursor.getString ( 1 );
+            listImage.add ( item );
+            cursor.moveToNext ();
+        }
+        cursor.close ();
+        return listImage;
+    }
     public Double DistanceCalculation(Context mConText,String Address,Location location)
     {
         Double distance = Double.valueOf(0.000);

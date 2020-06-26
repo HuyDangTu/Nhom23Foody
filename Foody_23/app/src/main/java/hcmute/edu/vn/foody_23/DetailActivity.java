@@ -2,14 +2,9 @@ package hcmute.edu.vn.foody_23;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -18,33 +13,21 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.ContentView;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Looper;
-import android.text.Layout;
 import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -53,24 +36,20 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-public class DetailActivity extends AppCompatActivity implements LocationListener {
+import java.util.TimeZone;
+
+public class DetailActivity extends AppCompatActivity implements LocationListener,OnMapReadyCallback {
 
 
     TextView textView;
@@ -83,6 +62,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     Store Quanan;
     Button BtnContact;
     GoogleMap map;
+    List<String> imageList;
 
     ///////// LOCATION
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
@@ -117,7 +97,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         locationManager.requestLocationUpdates ( LocationManager.GPS_PROVIDER, 0, 0, this );
 
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.myMaps);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager ().findFragmentById(R.id.myMaps);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
 
 
@@ -135,6 +115,12 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         txtTenQuan.setText ( Quanan.getName ()  );
 
         txtOpenTime.setText ( Quanan.getOpenTime () + " - " + Quanan.getCloseTime () );
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler2);
+        Quanan = DatabaseAccess.getInstance ( DetailActivity.this ).getStore ( key );
+        imageList = DatabaseAccess.getInstance(DetailActivity.this).GetImage(Quanan.getId ().toString ());
+        DetailRecycleView recycleViewAdapter = new DetailRecycleView (this,imageList);
+        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        recyclerView.setAdapter(recycleViewAdapter);
         try {
             CompareTime ( Quanan.getOpenTime (),Quanan.getCloseTime () );
         } catch (ParseException e) {
@@ -170,7 +156,6 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         dialog.setContentView ( R.layout.wifi_dialog );
         final TextView txtWifiName = (TextView) dialog.findViewById ( R.id.WifiName );
         final TextView txtWifiPass=(TextView) dialog.findViewById ( R.id.WifiPass );
-
         txtWifiName.setText ( Quanan.getWifi_name () );
         txtWifiPass.setText ( Quanan.getWifi_Password () );
         txtWifiPass.setTransformationMethod ( HideReturnsTransformationMethod.getInstance () );
@@ -194,15 +179,19 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     ///  TÍNH GIỜ MỞ CỦA
     private void CompareTime(String Open, String Close) throws ParseException {
         Calendar now = Calendar.getInstance();
+        now.setTimeZone ( TimeZone.getTimeZone ( "GMT+07" ) );
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
         int NowHour = now.get(Calendar.HOUR_OF_DAY);
         int NowMinute = now.get(Calendar.MINUTE);
-
-        int OpenTime = Integer.parseInt ( Open.replaceAll ( "\\D+","" ));
-        int CloseTime = Integer.parseInt ( Close.replaceAll ( "\\D+","" ) );
-        String Now = Integer.toString ( NowHour ) + Integer.toString ( NowMinute );
-        int RightNow = Integer.parseInt ( Now );
-        if ( RightNow > OpenTime && RightNow < CloseTime) {
+        Date Now = dateFormat.parse ( NowHour+":"+NowMinute );
+        Date OpenTime = dateFormat.parse ( Open );
+        Date CloseTime = dateFormat.parse ( Close );
+//
+//        int OpenTime = Integer.parseInt ( Open.replaceAll ( "\\D+","" ));
+//        int CloseTime = Integer.parseInt ( Close.replaceAll ( "\\D+","" ) );
+//        String Now = Integer.toString ( NowHour ) +""+ Integer.toString ( NowMinute );
+//        int RightNow = Integer.parseInt ( Now );
+        if ( Now.after ( OpenTime ) && Now.before ( CloseTime )) {
             txtisOpen.setText ( "ĐANG MỞ CỬA" );
             txtisOpen.setTextColor ( Color.BLACK);
         }
@@ -216,52 +205,12 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     @Override
     public void onLocationChanged(Location location) {
         txtLat = (TextView) findViewById ( R.id.KhoangCach );
-//        txtLat.setText ( location.getLatitude ()+"-"+location.getLongitude (  ) );
-        Geocoder geocoder = new Geocoder(DetailActivity.this,Locale.getDefault ());
-        try {
-            List addressList = geocoder.getFromLocationName(Quanan.getAddress (), 1);
-
-            Address destination = (Address) addressList.get ( 0 ) ;
-            Location locationA = new Location("point A");
-
-            locationA.setLatitude(destination.getLatitude ());
-            locationA.setLongitude(destination.getLongitude ());
-
-            Location locationB = new Location("point B");
-
-            locationB.setLatitude(location.getLatitude ());
-            locationB.setLongitude(location.getLongitude ());
-
-            Double distance = Double.valueOf ( locationA.distanceTo(locationB)/1000);
-//            RelativeLayout detailLayout = (RelativeLayout) findViewById ( R.id.relativeLay.out6 );
-//            String url = "http://maps.google.com/maps/api/staticmap?center=" + destination.getLatitude () + "," + destination.getLongitude () + "&zoom=15&size=200x200&sensor=false&key=AIzaSyAyYhjRiaVj5QCwb37NNh4LUipClZMxmD0";
-//            Bitmap bitmap = getBitmapFromURL ( url );
-//            BitmapDrawable ob = new BitmapDrawable(getResources(), bitmap);
-//            detailLayout.setBackground ( ob );
+            Double distance = DatabaseAccess.getInstance ( DetailActivity.this ).DistanceCalculation ( DetailActivity.this,Quanan.getAddress (),location );
 
             txtLat.setText (String.format ( "%.2f",distance)+" km "+"từ vị trí hiện tại");
-        }
-        catch (IOException e) {
-            e.printStackTrace ();
-
-        }
     }
 
 
-//    public static Bitmap getBitmapFromURL(String src) {
-//        try {
-//            URL url = new URL(src);
-//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//            connection.setDoInput(true);
-//            connection.connect();
-//            InputStream input = connection.getInputStream();
-//            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-//            return myBitmap;
-//        } catch (IOException e) {
-//            // Log exception
-//            return null;
-//        }
-//    }
 
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -304,8 +253,6 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
                         }
                     }
                 }, Looper.getMainLooper());
-        // Add a marker in Sydney, Australia,
-        // and move the map's camera to the same location.
     }
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
