@@ -1,5 +1,7 @@
 package hcmute.edu.vn.foody_23;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -8,26 +10,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Database;
 
 import android.Manifest;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -127,6 +126,93 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-    
-    
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode==PERMISSION_REQUEST_CODE)
+        {
+            HashMap<String,Integer> permissionRequests = new HashMap<> (  );
+            int deniedCount = 0;
+            for(int i=0; i<grantResults.length;i++)
+            {
+                if(grantResults[i]==PackageManager.PERMISSION_DENIED)
+                {
+                    permissionRequests.put ( permissions[i],grantResults[i] );
+                    deniedCount++;
+                }
+            }
+            if(deniedCount ==0)
+            {
+                initApp ();
+            }
+            else
+            {
+                for(Map.Entry<String,Integer> entry : permissionRequests.entrySet ())
+                {
+                    String permName = entry.getKey ();
+                    int permResult= entry.getValue ();
+                    if (ActivityCompat.shouldShowRequestPermissionRationale ( this,permName ))
+                    {
+                        showDialog ( "","This app needs Location and Storage and Call permissions to work without and problems.",
+                                "Yes, Grant Permissions",
+                                new DialogInterface.OnClickListener ( ){
+                            @Override
+                            public void onClick(DialogInterface dialogInterface,int i) {
+                                dialogInterface.dismiss ();
+                                checkAndRequestPermissions ();
+                                 }
+                            },
+                                    "No, Exit app",new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss ();
+                                        finish ();
+                                    }
+                                },false);
+                     }
+                    else {
+                        showDialog ( "", "You have denied some permissions.Allow all permissions at [Settings] > [Permissions]",
+                                "Go to Settings",
+                                new DialogInterface.OnClickListener () {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.dismiss ();
+                                        Intent intent = new Intent ( Settings.ACTION_APPLICATION_DETAILS_SETTINGS ,
+                                        Uri.fromParts ( "package", getPackageName (), null) );
+                                        intent.addFlags ( Intent.FLAG_ACTIVITY_NEW_TASK );
+                                        startActivity ( intent );
+                                        finish ();
+                                    }
+                                    },
+                                    "No, Exit App", new DialogInterface.OnClickListener (){
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i)
+                                    {
+                                        dialogInterface.dismiss ();
+                                        finish ();
+                                    }
+                                },false
+                        );
+                        break;
+                    }
+                }
+
+
+            }
+        }
+
+        super.onRequestPermissionsResult ( requestCode, permissions, grantResults );
+    }
+
+    private AlertDialog showDialog(String title, String msg, String positiveLabel, DialogInterface.OnClickListener positiveOnClick, String negativeLabel, DialogInterface.OnClickListener negativeOnClick, boolean isCancelAble) {
+        AlertDialog.Builder builder = new AlertDialog.Builder ( this );
+        builder.setTitle ( title );
+        builder.setCancelable ( isCancelAble );
+        builder.setMessage ( msg );
+        builder.setPositiveButton ( positiveLabel,positiveOnClick );
+        builder.setNegativeButton ( negativeLabel,negativeOnClick );
+        AlertDialog alert = builder.create ();
+        alert.show ();
+        return alert;
+    }
 }

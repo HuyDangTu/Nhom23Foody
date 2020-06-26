@@ -170,8 +170,6 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
             @Override
             public void onClick(View v) {
 
-//      Toast.makeText ( DetailActivity.this,"Mật khẩu không hợp lệ",Toast.LENGTH_SHORT ).show ();
-//
             DatabaseAccess.getInstance ( DetailActivity.this ).UpdateWifi ( key,txtWifiPass.getText ().toString () );
 
 
@@ -193,11 +191,6 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         Date Now = dateFormat.parse ( NowHour+":"+NowMinute );
         Date OpenTime = dateFormat.parse ( Open );
         Date CloseTime = dateFormat.parse ( Close );
-//
-//        int OpenTime = Integer.parseInt ( Open.replaceAll ( "\\D+","" ));
-//        int CloseTime = Integer.parseInt ( Close.replaceAll ( "\\D+","" ) );
-//        String Now = Integer.toString ( NowHour ) +""+ Integer.toString ( NowMinute );
-//        int RightNow = Integer.parseInt ( Now );
         if ( Now.after ( OpenTime ) && Now.before ( CloseTime )) {
             txtisOpen.setText ( "ĐANG MỞ CỬA" );
             txtisOpen.setTextColor ( Color.BLACK);
