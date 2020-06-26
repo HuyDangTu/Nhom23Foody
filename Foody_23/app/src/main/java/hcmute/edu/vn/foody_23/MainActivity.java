@@ -1,11 +1,16 @@
 package hcmute.edu.vn.foody_23;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Database;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -27,20 +32,33 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     EditText edtTimKiem;
-    List<MonAn> monAnList = new ArrayList<>();
+    List<CuaHang> monAnList = new ArrayList<>();
     TextView txtTinhThanh;
     TextView txtThucDon;
     Cursor cursor;
     int tinhThanhID = 63;
-
+    public static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
+    public static final int REQUEST_WRITE_PERMISSION = 2;
+    public static final int REQUEST_CALL_PERMISSION = 3;
     public static Database database;
-
+    String[] appPermissions = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.CALL_PHONE
+    };
+    private static final int PERMISSION_REQUEST_CODE =1240;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(checkAndRequestPermissions())
+        {
+            initApp();
+        }
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
+
 
 
         // CÁC SỰ KIỆN CLICK
@@ -89,4 +107,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void initApp() {
+    }
+
+    private boolean checkAndRequestPermissions() {
+        List<String> listPermissionsNeeded = new ArrayList<> (  );
+        for(String perm : appPermissions)
+        {
+            if (ContextCompat.checkSelfPermission ( this,perm )!=PackageManager.PERMISSION_GRANTED)
+            {
+                listPermissionsNeeded.add ( perm );
+            }
+        }
+        if(!listPermissionsNeeded.isEmpty ())
+        {
+            ActivityCompat.requestPermissions ( this,listPermissionsNeeded.toArray (new String[listPermissionsNeeded.size ()]),PERMISSION_REQUEST_CODE );
+            return false;
+        }
+        return true;
+    }
+    
+    
 }

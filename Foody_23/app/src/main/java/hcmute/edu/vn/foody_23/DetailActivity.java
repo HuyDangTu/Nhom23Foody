@@ -61,7 +61,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     TextView txtTenQuan;
     TextView txtProvince;
     TextView txtWifi;
-    Store Quanan;
+    CuaHang Quanan;
     Button BtnContact;
     GoogleMap map;
     List<String> imageList;

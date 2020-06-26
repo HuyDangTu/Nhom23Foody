@@ -23,10 +23,10 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
 
     private Context mContext;
-    private List<MonAn> mData;
+    private List<CuaHang> mData;
     assetManager assetMag = new assetManager();
 
-    public RecycleViewAdapter(Context mContext, List<MonAn> mData) {
+    public RecycleViewAdapter(Context mContext, List<CuaHang> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }
@@ -42,9 +42,9 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
-        holder.book_title.setText(mData.get(position).getTitle());
+        holder.book_title.setText(mData.get(position).getName ());
         holder.food_des.setText(mData.get(position).getDescription());
-        String fileName = mData.get(position).getThumbnail();
+        String fileName = mData.get(position).getImage ();
         Bitmap image = null;
         try {
             image = assetMag.getImage(fileName,mContext);

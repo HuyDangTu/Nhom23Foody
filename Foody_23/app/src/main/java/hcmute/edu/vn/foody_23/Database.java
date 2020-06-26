@@ -42,21 +42,21 @@ public class Database extends SQLiteOpenHelper{
         statement.bindString(3,Kieuhinhanh);
         statement.executeInsert();
     }
-    public void insert_Store(Store store){
-        SQLiteDatabase database = getWritableDatabase();
-        String sql = "INSERT INTO Store VALUES(null,?,?,?,?,?,?,?)";
-        SQLiteStatement statement = database.compileStatement(sql);
-        statement.clearBindings();
-        statement.bindString(1,store.getAddress());
-        statement.bindString(2,store.getName());
-        statement.bindString(3,store.getDescription());
-        statement.bindLong(4,store.getProvince_Id());
-        statement.bindString(5,store.getOpenTime());
-        statement.bindString(6,store.getWifi_name());
-        statement.bindString(7,store.getWifi_Password());
-        statement.executeInsert();
-
-    }
+//    public void insert_Store(Store store){
+//        SQLiteDatabase database = getWritableDatabase();
+//        String sql = "INSERT INTO Store VALUES(null,?,?,?,?,?,?,?)";
+//        SQLiteStatement statement = database.compileStatement(sql);
+//        statement.clearBindings();
+//        statement.bindString(1,store.getAddress());
+//        statement.bindString(2,store.getName());
+//        statement.bindString(3,store.getDescription());
+//        statement.bindLong(4,store.getProvince_Id());
+//        statement.bindString(5,store.getOpenTime());
+//        statement.bindString(6,store.getWifi_name());
+//        statement.bindString(7,store.getWifi_Password());
+//        statement.executeInsert();
+//
+//    }
 
     public Cursor Load_all_store()
     {

@@ -72,8 +72,8 @@ public class DatabaseAccess  {
      * @return a List of quotes
      */
 
-    public List<MonAn> getMonAn(int IdTinhThanh) {
-        List<MonAn> list = new ArrayList<>();
+    public List<CuaHang> getMonAn(int IdTinhThanh) {
+        List<CuaHang> list = new ArrayList<>();
         database = openHelper.getReadableDatabase();
         Cursor cursor = database.rawQuery("select Store.Id, Store.Description, Store.Name, Image.HinhAnh " +
                 " from Store inner join Image on Image.Store_Id = Store.Id inner join Province on Store.Province_Id = Province.Id " +
@@ -85,8 +85,8 @@ public class DatabaseAccess  {
                 String Desc = cursor.getString(1);
                 String Name = cursor.getString(2);
                 String Img = cursor.getString(3);
-                int ID = cursor.getInt ( 0 );
-                MonAn monAn = new MonAn(Name, Desc, Img,ID);
+                String ID = String.valueOf (  cursor.getInt ( 0 ));
+                CuaHang monAn = new CuaHang (ID,Name,"","","","",Img,"","",Desc,0,"","","","","");
                 list.add(monAn);
                 cursor.moveToNext();
             }
@@ -110,8 +110,7 @@ public class DatabaseAccess  {
             String score = cursor.getString(4);
             String comment = String.valueOf(cursor.getInt(5));
             String Img = cursor.getString(6);
-            CuaHang cuaHang = new CuaHang(Id,Name,Address,"8","9",comment,Img,score,type);
-
+            CuaHang cuaHang = new CuaHang(Id,Name,Address,"8","9",comment,Img,score,type,"",0,"","","","","");
             list.add(cuaHang);
             cursor.moveToNext();
         }
@@ -137,7 +136,7 @@ public class DatabaseAccess  {
             String score = cursor.getString(4);
             String comment = String.valueOf(cursor.getInt(5));
             String Img = cursor.getString(6);
-            CuaHang cuaHang = new CuaHang(Id,Name,Address,distance,"9",comment,Img,score,type);
+            CuaHang cuaHang = new CuaHang(Id,Name,Address,distance,"9",comment,Img,score,type,"",0,"","","","","");
             list.add(cuaHang);
             cursor.moveToNext();
         }
@@ -162,7 +161,7 @@ public class DatabaseAccess  {
             String score = cursor.getString(4);
             String comment = String.valueOf(cursor.getInt(5));
             String Img = cursor.getString(6);
-            CuaHang cuaHang = new CuaHang(Id,Name,Address,distance,"9",comment,Img,score,type);
+            CuaHang cuaHang = new CuaHang(Id,Name,Address,distance,"9",comment,Img,score,type,"",0,"","","","","");
 
             list.add(cuaHang);
             cursor.moveToNext();
@@ -189,7 +188,7 @@ public class DatabaseAccess  {
                 String score = cursor.getString(4);
                 String comment = String.valueOf(cursor.getInt(5));
                 String Img = cursor.getString(6);
-                CuaHang cuaHang = new CuaHang(Id, Name, Address, String.format ( "%.2f",distance), "9", comment, Img, score, type);
+                CuaHang cuaHang = new CuaHang(Id, Name, Address, String.format ( "%.2f",distance), "9", comment, Img, score, type,"",0,"","","","","");
                 list.add(cuaHang);
             }
             cursor.moveToNext();
@@ -226,12 +225,12 @@ public class DatabaseAccess  {
         return tinhThanhID;
     }
 
-    public Store getStore(String key)
+    public CuaHang getStore(String key)
     {
         database = openHelper.getReadableDatabase();
         Cursor cursor = database.rawQuery ("select * from Store where Store.Id= "+String.valueOf ( key ), null);
         cursor.moveToFirst ();
-        int StId = cursor.getInt ( 0 );
+        String StId = String.valueOf (  cursor.getInt ( 0 ));
         String StAddress = cursor.getString ( 1 );
         String StName = cursor.getString ( 2 );
         String StDes = cursor.getString ( 3 );
@@ -241,7 +240,7 @@ public class DatabaseAccess  {
         String StWifipass = cursor.getString ( 7 );
         String StNum = cursor.getString ( 11 );
         String StClose = cursor.getString ( 12 );
-        Store QuanAn = new Store(StId,StAddress,StName,StDes,StProvince,StOpentime,StWifiname,StWifipass,StNum,StClose);
+        CuaHang QuanAn = new CuaHang (StId,StName,StAddress,"","","","","","",StDes,StProvince,StOpentime,StWifiname,StWifipass,StNum,StClose);
         cursor.close ();
         return QuanAn;
     }
