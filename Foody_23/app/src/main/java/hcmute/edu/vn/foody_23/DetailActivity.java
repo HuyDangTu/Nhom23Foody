@@ -28,6 +28,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -172,7 +174,12 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
 //
             DatabaseAccess.getInstance ( DetailActivity.this ).UpdateWifi ( key,txtWifiPass.getText ().toString () );
 
+
                dialog.cancel ();
+                Toast.makeText ( DetailActivity.this,"Đã cập nhật mật khẩu",Toast.LENGTH_SHORT ).show ();
+                finish();
+                startActivity(getIntent());
+
             }
         } );
     }
