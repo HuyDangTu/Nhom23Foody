@@ -145,6 +145,9 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent ( DetailActivity.this,ThucDonActivity.class );
+                intent.putExtra("StoreName",Quanan.getName ());
+                intent.putExtra("CurrentStore",Quanan.getId ());
+                intent.putExtra("IdStore",Quanan.getId ());
                 startActivity ( intent );
             }
         } );
