@@ -13,14 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.IOException;
 import java.util.List;
 
-public class DetailRecycleView extends RecyclerView.Adapter<DetailRecycleView.MyViewHolder> {
+public class DetailRecyclerViewAdapter extends RecyclerView.Adapter<DetailRecyclerViewAdapter.MyViewHolder> {
 
 
     private Context mContext;
     private List<String> mData;
     assetManager assetMag = new assetManager ();
 
-    public DetailRecycleView(Context mContext, List<String> mData) {
+    public DetailRecyclerViewAdapter(Context mContext, List<String> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }

@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -18,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +36,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -72,13 +69,9 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     ///////// LOCATION
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     protected LocationManager locationManager;
-    protected LocationListener locationListener;
     protected Context context;
     TextView txtLat;
-    String lat;
-    String provider;
-    protected String latitude, longitude;
-    protected boolean gps_enabled, network_enabled;
+
     public String key;
 
     @Override
@@ -124,7 +117,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler2);
         Quanan = DatabaseAccess.getInstance ( DetailActivity.this ).getStore ( key );
         imageList = DatabaseAccess.getInstance(DetailActivity.this).GetImage(Quanan.getId ().toString ());
-        DetailRecycleView recycleViewAdapter = new DetailRecycleView (this,imageList);
+        DetailRecyclerViewAdapter recycleViewAdapter = new DetailRecyclerViewAdapter (this,imageList);
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
         recyclerView.setAdapter(recycleViewAdapter);
         try {
