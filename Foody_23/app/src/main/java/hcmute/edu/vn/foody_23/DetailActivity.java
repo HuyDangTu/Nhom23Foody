@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,6 +67,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     Button BtnContact;
     GoogleMap map;
     List<String> imageList;
+    TextView txtWifiName;
 
     ///////// LOCATION
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
@@ -111,12 +114,13 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         txtisOpen = (TextView) findViewById ( R.id.textOpen );
         BtnContact = (Button) findViewById ( R.id.Contact ) ;
         txtWifi = (TextView) findViewById ( R.id.wifiactionicon );
-
+        txtWifiName = (TextView) findViewById ( R.id.WifiName );
         textView = (TextView) findViewById ( R.id.menutab );
         txtDiaChi.setText ( Quanan.getAddress () );
         txtTenQuan.setText ( Quanan.getName ()  );
-
+        txtWifiName.setText ( Quanan.getWifi_name () );
         txtOpenTime.setText ( Quanan.getOpenTime () + " - " + Quanan.getCloseTime () );
+        txtProvince.setText ( DatabaseAccess.getInstance ( DetailActivity.this ).GetTenTinh ( Quanan.getProvince_Id () ) );
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler2);
         Quanan = DatabaseAccess.getInstance ( DetailActivity.this ).getStore ( key );
         imageList = DatabaseAccess.getInstance(DetailActivity.this).GetImage(Quanan.getId ().toString ());
@@ -193,7 +197,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         Date CloseTime = dateFormat.parse ( Close );
         if ( Now.after ( OpenTime ) && Now.before ( CloseTime )) {
             txtisOpen.setText ( "ĐANG MỞ CỬA" );
-            txtisOpen.setTextColor ( Color.BLACK);
+            txtisOpen.setTextColor ( Color.rgb ( 66,99,00 ) );
         }
         else {
             txtisOpen.setText ( "ĐÃ ĐÓNG CỬA"  );

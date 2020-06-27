@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.PropertyResourceBundle;
 
 public class DatabaseAccess  {
     private SQLiteOpenHelper openHelper;
@@ -290,5 +291,14 @@ public class DatabaseAccess  {
             e.printStackTrace ();
             return distance;
         }
+    }
+    public String GetTenTinh(int ProID)
+    {
+        database = openHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery ("select * from Province where Province.Id= "+ProID, null);
+        cursor.moveToFirst ();
+        String TenTinh = cursor.getString ( 1);
+        cursor.close ();
+        return TenTinh;
     }
 }

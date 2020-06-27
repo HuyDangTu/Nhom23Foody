@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     String[] appPermissions = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.CALL_PHONE
     };
     private static final int PERMISSION_REQUEST_CODE =1240;
