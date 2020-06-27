@@ -56,9 +56,6 @@ public class MainActivity extends AppCompatActivity {
         {
             initApp();
         }
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
-
-
 
         // CÁC SỰ KIỆN CLICK
         txtTinhThanh = findViewById(R.id.txtTinhThanh);
@@ -71,6 +68,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Filter();
+
+        edtTimKiem = (EditText) findViewById(R.id.search_Index);
+        edtTimKiem.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+                    intent.putExtra("Keyword",edtTimKiem.getText().toString());
+                    intent.putExtra("provinceId",tinhThanhID);
+                    intent.putExtra("provinceName",txtTinhThanh.getText().toString());
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    public void Filter(){
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
         // Lọc món ăn theo TỈNH
         Intent intent = getIntent();
         String x = intent.getStringExtra("Province");
@@ -89,22 +107,6 @@ public class MainActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(new GridLayoutManager(this,2));
             recyclerView.setAdapter(recycleViewAdapter);
         }
-
-        edtTimKiem = (EditText) findViewById(R.id.search_Index);
-        edtTimKiem.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Intent intent = new Intent(MainActivity.this,SearchActivity.class);
-                    intent.putExtra("Keyword",edtTimKiem.getText().toString());
-                    intent.putExtra("provinceId",tinhThanhID);
-                    intent.putExtra("provinceName",txtTinhThanh.getText().toString());
-                    startActivity(intent);
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
     private void initApp() {

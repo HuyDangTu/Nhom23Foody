@@ -77,20 +77,7 @@ public class TinhThanhActivity extends AppCompatActivity {
 
         edtTimKiemTinhThanh.setAdapter(tinhThanhAdapter);
 
-        //Check the province which stay in main activity and make it blue
-//        if (savedInstanceState != null){
-//            Toast.makeText(this, "Duma Police", Toast.LENGTH_SHORT).show();
-//            int kq = savedInstanceState.getInt("Position");
-//        }
-        preferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        c = preferences.getInt("Position",0);
-        if (c!= 100){
-            listView.setItemChecked(c,true);
-        }
-
-//        if (preferences.getInt("Position",0) != 0){
-//            Toast.makeText(this, "Duma Police", Toast.LENGTH_SHORT).show();
-//        }
+        LuuTenTinh();
 
         AdapterView.OnItemClickListener list  =new AdapterView.OnItemClickListener(){
 
@@ -118,6 +105,11 @@ public class TinhThanhActivity extends AppCompatActivity {
         listView.setOnItemClickListener(list);
 
 
+    }
+    public void LuuTenTinh() {
+        preferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        c = preferences.getInt("Position", 0);
+        listView.setItemChecked(c, true);
     }
 
     @Override
