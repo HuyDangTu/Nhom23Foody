@@ -116,7 +116,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         txtProvince.setText ( DatabaseAccess.getInstance ( DetailActivity.this ).GetTenTinh ( Quanan.getProvince_Id () ) );
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler2);
         Quanan = DatabaseAccess.getInstance ( DetailActivity.this ).getStore ( key );
-        imageList = DatabaseAccess.getInstance(DetailActivity.this).GetImage(Quanan.getId ().toString ());
+        imageList = DatabaseAccess.getInstance(DetailActivity.this).GetImage(Quanan.getId ().toString (),"list");
         DetailRecyclerViewAdapter recycleViewAdapter = new DetailRecyclerViewAdapter (this,imageList);
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
         recyclerView.setAdapter(recycleViewAdapter);

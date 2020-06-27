@@ -14,7 +14,7 @@
             android:id="@+id/txtAnh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="140dp"
+            android:layout_marginLeft="120dp"
             android:padding="20dp"
             android:text="Ảnh"
             android:textColor="#000000"

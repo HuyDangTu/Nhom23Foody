@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardview_id"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="0dp"
+    android:layout_width="140dp"
+    android:layout_height="140dp"
+    android:layout_margin="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/thumb_food_menu_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#2d2d2d"
+            android:scaleType="centerCrop"></ImageView>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

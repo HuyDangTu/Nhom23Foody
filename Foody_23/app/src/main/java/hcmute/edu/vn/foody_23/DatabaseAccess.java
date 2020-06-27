@@ -72,7 +72,39 @@ public class DatabaseAccess  {
      *
      * @return a List of quotes
      */
-
+    public List<ThucDonGroup> getThucDonGroup(String IdCuaHang) {
+        List<ThucDonGroup> list = new ArrayList<>();
+        database = openHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery("select * from Menu_group where Menu_group.Store_Id = "+ IdCuaHang, null);
+        cursor.moveToFirst();
+        list.clear();
+        while (!cursor.isAfterLast()) {
+            int Store_id = cursor.getInt(1);
+            String Name = cursor.getString(2);
+            int group_ID = cursor.getInt ( 0 );
+            ThucDonGroup thucDonGroup = new ThucDonGroup(group_ID, Name,Store_id);
+            list.add(thucDonGroup);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+    }
+    public List<ThucDon> getThucDon(int GroupId) {
+        List<ThucDon> list = new ArrayList<>();
+        database = openHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery("select TenMon,GiatTien from Menu where Menu.group_id = "+ GroupId, null);
+        cursor.moveToFirst();
+        list.clear();
+        while (!cursor.isAfterLast()) {
+            String Title = cursor.getString(0);
+            String Price = cursor.getString(1);
+            ThucDon thucDon = new ThucDon(Title,Price);
+            list.add(thucDon);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+    }
     public List<CuaHang> getMonAn(int IdTinhThanh) {
         List<CuaHang> list = new ArrayList<>();
         database = openHelper.getReadableDatabase();
@@ -252,11 +284,11 @@ public class DatabaseAccess  {
         SQLiteStatement statement = database.compileStatement ( Query );
         statement.execute ();
     }
-    public List<String> GetImage (String key)
+    public List<String> GetImage (String key,String type)
     {
         List<String> listImage = new ArrayList<> (  );
         database = openHelper.getReadableDatabase();
-        Cursor cursor = database.rawQuery("select * from Image where Image.Store_Id ="+String.valueOf ( key ), null);
+        Cursor cursor = database.rawQuery("select * from Image where Image.Store_Id ="+String.valueOf ( key )+" and Image.Kieuhinhanh='"+String.valueOf ( type )+"'", null);
         cursor.moveToFirst();
         listImage.clear ();
         while (!cursor.isAfterLast ()) {
