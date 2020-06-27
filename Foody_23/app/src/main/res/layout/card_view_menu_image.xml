@@ -5,22 +5,20 @@
     android:foreground="?android:attr/selectableItemBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="0dp"
-    android:layout_width="180dp"
-    android:layout_height="180dp"
+    android:layout_width="140dp"
+    android:layout_height="140dp"
     android:layout_margin="5dp">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <ImageView
-            android:padding="2dp"
-            android:id="@+id/imageview"
+            android:id="@+id/thumb_food_menu_id"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:background="#FFFFFF">
-        </ImageView>
-
+            android:background="#2d2d2d"
+            android:scaleType="centerCrop"></ImageView>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

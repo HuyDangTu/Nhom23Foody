@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
@@ -19,21 +20,29 @@ import java.util.List;
 public class ThucDonActivity extends AppCompatActivity {
 
     ExpandableListView expandableThucAn;
-    int CuaHangid;
-    TextView txtImgThucDon;
+    TextView txtImgThucDon,tenquanan;
     List<String> listdataHeader;
-    List<ThucDonGroup>listgroup;
     HashMap<String, List<ThucDon>> listdataChild;
     ThucDonExpandableAdapter thucDonExpandableAdapter;
     ImageView imageback;
+    String key,name,id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.xem_thuc_don);
 
-        CuaHangid = getIntent().getIntExtra("ID",1);
+
+        Intent intent = getIntent ();
+        key = intent.getExtras ().getString ( "CurrentStore" );
+        name = intent.getExtras ().getString ( "StoreName" );
+        id =intent.getExtras().getString("IdStore");
+
+
         imageback = findViewById(R.id.img_back);
         txtImgThucDon = findViewById(R.id.txtAnh);
+        tenquanan = findViewById(R.id.ten_quan_an);
+
+        tenquanan.setText(name);
 
         AddFood();
         thucDonExpandableAdapter = new ThucDonExpandableAdapter(ThucDonActivity.this,listdataHeader,listdataChild);
@@ -44,7 +53,9 @@ public class ThucDonActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ThucDonActivity.this,ThucDonAnhActivity.class);
-                intent.putExtra("ID",CuaHangid);
+                intent.putExtra("StoreName",name);
+                intent.putExtra("CurrentStore",key);
+                intent.putExtra("IdStore",id);
                 startActivity(intent);
             }
         });
@@ -52,15 +63,27 @@ public class ThucDonActivity extends AppCompatActivity {
         imageback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ThucDonActivity.this, DetailActivity.class);
-                intent.putExtra("ID",CuaHangid);
-                startActivity(intent);
+                finish();
             }
         });
 
 
     }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
+
+    //Expandable List ThucDon
     private void Expand() {
         expandableThucAn.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
@@ -81,39 +104,22 @@ public class ThucDonActivity extends AppCompatActivity {
         expandableThucAn.setAdapter(thucDonExpandableAdapter);
     }
 
+    //Lấy dữ liệu thực đơn nhằm hiển thị lên
     private void AddFood() {
         expandableThucAn = (ExpandableListView) findViewById(R.id.expandlelistview_thuc_don);
         listdataHeader = new ArrayList<String>();
         listdataChild = new HashMap<String, List<ThucDon>>();
 
-        listdataHeader.add("Bò Mỹ nhúng ớt");
-        listdataHeader.add("Bún đậu");
-        listdataHeader.add("Mắm");
-        listdataHeader.add("Món Thêm");
 
-        List<ThucDon> BoMynhungot = new ArrayList<ThucDon>();
-        BoMynhungot.add(new ThucDon("Bò mỹ nhúng ớt nhỏ","119,000"));
-        BoMynhungot.add(new ThucDon("Bò mỹ nhúng ớt vừa","219,000"));
-        BoMynhungot.add(new ThucDon("Bò mỹ nhúng ớt lớn","289,000"));
-
-        List<ThucDon> BunDau = new ArrayList<ThucDon>();
-        BunDau.add(new ThucDon("Bún đậu nhỏ","69,000"));
-        BunDau.add(new ThucDon("Bún đậu lớn","89,000"));
-        BunDau.add(new ThucDon("Bún đậu vừa","109,000"));
-
-        List<ThucDon> Mam = new ArrayList<ThucDon>();
-        Mam.add(new ThucDon("Mắm tôm tỏi","35,000"));
-        Mam.add(new ThucDon("Mắm tép","28,000"));
-        Mam.add(new ThucDon("Mắm nêm","20,000"));
-        List<ThucDon> MonThem = new ArrayList<ThucDon>();
-        MonThem.add(new ThucDon("Cocacola","10,000"));
-        MonThem.add(new ThucDon("Pepsi","10,000"));
-        MonThem.add(new ThucDon("Sting","12,000"));
-        MonThem.add(new ThucDon("Khăn mặt","3,000"));
-
-        listdataChild.put(listdataHeader.get(0),BoMynhungot);
-        listdataChild.put(listdataHeader.get(1),BunDau);
-        listdataChild.put(listdataHeader.get(2),Mam);
-        listdataChild.put(listdataHeader.get(3),MonThem);
+        //Lấy list<ThucDonGroup>
+        List<ThucDonGroup> thucDonGroups = DatabaseAccess.getInstance(ThucDonActivity.this).getThucDonGroup(key);
+        List<ThucDon> thucDons = new ArrayList<>();
+        int group_id;
+        for(int i=0;i<thucDonGroups.size();i++) {
+            listdataHeader.add(thucDonGroups.get(i).getName());
+            group_id = thucDonGroups.get(i).getId();
+            thucDons = DatabaseAccess.getInstance(ThucDonActivity.this).getThucDon(group_id);
+            listdataChild.put(thucDonGroups.get(i).getName(), thucDons);
+        }
     }
 }

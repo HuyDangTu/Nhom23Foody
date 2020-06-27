@@ -60,19 +60,15 @@ public class SeachResultRecycleViewAdapter extends RecyclerView.Adapter<SeachRes
         holder.imageCount.setText(mData.get(position).getImageCount());
         holder.commentCount.setText(mData.get(position).getCommentCount());
         holder.id.setText(mData.get(position).getId());
-        holder.setItemClickListener ( new ItemClickListener () {
+        holder.cardView.setOnClickListener ( new View.OnClickListener () {
             @Override
-            public void onClick(View view, int position, boolean isLongClick) {
-                if(isLongClick)
-                    Toast.makeText ( mContext,"Long Click:"+ mData.get ( position ),Toast.LENGTH_SHORT).show ();
-                else
-                {
-                    Intent intent = new Intent (mContext,DetailActivity.class );
-                    intent.putExtra("CurrentStore", mData.get ( position ).getId ());
-                    mContext.startActivity ( intent);
-                }
+            public void onClick(View view) {
+                Intent intent = new Intent (mContext,DetailActivity.class );
+                intent.putExtra("CurrentStore", mData.get ( position ).getId ());
+                mContext.startActivity ( intent);
             }
         } );
+
 //        holder.cardView.setOnClickListener ( new View.OnClickListener () {
 //            @Override
 //            public void onClick(View v) {
@@ -89,12 +85,11 @@ public class SeachResultRecycleViewAdapter extends RecyclerView.Adapter<SeachRes
         return mData.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView id,name,score,address,distance,type,imageCount,commentCount;
         ImageView image;
         CardView cardView;
-        private ItemClickListener itemClickListener;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -108,25 +103,8 @@ public class SeachResultRecycleViewAdapter extends RecyclerView.Adapter<SeachRes
             image = (ImageView) itemView.findViewById(R.id.thumb_food_image);
             cardView = (CardView) itemView.findViewById(R.id.cardviewid);
             id = (TextView) itemView.findViewById(R.id.StoreID);
-            itemView.setOnClickListener ( this );
-            itemView.setOnLongClickListener ( this );
-        }
 
-        public void setItemClickListener(ItemClickListener itemClickListener)
-        {
-            this.itemClickListener = itemClickListener;
         }
-        @Override
-        public void onClick(View v) {
-            itemClickListener.onClick ( v,getAdapterPosition (),false );
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            itemClickListener.onClick ( v,getAdapterPosition (),true );
-            return false;
-        }
-
     }
 
 
