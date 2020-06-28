@@ -53,25 +53,25 @@ public class MainActivity extends AppCompatActivity {
     };
     private static final int PERMISSION_REQUEST_CODE =1240;
 
-    private final LocationListener mLocationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(final Location location) {
-            //your code here
-            currentLocation = location;
-        }
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-
-        }
-        @Override
-        public void onProviderEnabled(String provider) {
-
-        }
-        @Override
-        public void onProviderDisabled(String provider) {
-
-        }
-    };
+//    private final LocationListener mLocationListener = new LocationListener() {
+//        @Override
+//        public void onLocationChanged(final Location location) {
+//            //your code here
+//            currentLocation = location;
+//        }
+//        @Override
+//        public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//        }
+//        @Override
+//        public void onProviderEnabled(String provider) {
+//
+//        }
+//        @Override
+//        public void onProviderDisabled(String provider) {
+//
+//        }
+//    };
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -81,9 +81,6 @@ public class MainActivity extends AppCompatActivity {
         {
             initApp();
         }
-
-        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0, mLocationListener);
 
 
 
@@ -100,23 +97,23 @@ public class MainActivity extends AppCompatActivity {
 
         Filter();
 
-        edtTimKiem = (EditText) findViewById(R.id.search_Index);
-        edtTimKiem.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Intent intent = new Intent(MainActivity.this,SearchActivity.class);
-                    intent.putExtra("Keyword",edtTimKiem.getText().toString());
-                    intent.putExtra("provinceId",tinhThanhID);
-                    intent.putExtra("long",String.valueOf(currentLocation.getLongitude()));
-                    intent.putExtra("lat",String.valueOf(currentLocation.getLatitude()));
-                    intent.putExtra("provinceName",txtTinhThanh.getText().toString());
-                    startActivity(intent);
-                    return true;
-                }
-                return false;
-            }
-        });
+//        edtTimKiem = (EditText) findViewById(R.id.search_Index);
+//        edtTimKiem.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//            @Override
+//            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//                    Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+//                    intent.putExtra("Keyword",edtTimKiem.getText().toString());
+//                    intent.putExtra("provinceId",tinhThanhID);
+//                    intent.putExtra("long",String.valueOf(currentLocation.getLongitude()));
+//                    intent.putExtra("lat",String.valueOf(currentLocation.getLatitude()));
+//                    intent.putExtra("provinceName",txtTinhThanh.getText().toString());
+//                    startActivity(intent);
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
     }
 
     public void Filter(){
@@ -140,7 +137,48 @@ public class MainActivity extends AppCompatActivity {
             recyclerView.setAdapter(recycleViewAdapter);
         }
     }
+
+    @SuppressLint("MissingPermission")
     private void initApp() {
+        final LocationListener mLocationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(final Location location) {
+                //your code here
+                currentLocation = location;
+            }
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0, mLocationListener);
+
+        edtTimKiem = (EditText) findViewById(R.id.search_Index);
+        edtTimKiem.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Intent intent = new Intent(MainActivity.this,SearchActivity.class);
+                    intent.putExtra("Keyword",edtTimKiem.getText().toString());
+                    intent.putExtra("provinceId",tinhThanhID);
+                    intent.putExtra("long",String.valueOf(currentLocation.getLongitude()));
+                    intent.putExtra("lat",String.valueOf(currentLocation.getLatitude()));
+                    intent.putExtra("provinceName",txtTinhThanh.getText().toString());
+                    startActivity(intent);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private boolean checkAndRequestPermissions() {
@@ -229,8 +267,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
-
-
             }
         }
 
