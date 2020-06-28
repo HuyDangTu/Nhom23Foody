@@ -10,10 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Database;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     TextView txtThucDon;
     Cursor cursor;
     int tinhThanhID = 63;
+    Location currentLocation;
+
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     public static final int REQUEST_WRITE_PERMISSION = 2;
     public static final int REQUEST_CALL_PERMISSION = 3;
@@ -47,6 +53,26 @@ public class MainActivity extends AppCompatActivity {
     };
     private static final int PERMISSION_REQUEST_CODE =1240;
 
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            //your code here
+            currentLocation = location;
+        }
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -55,6 +81,11 @@ public class MainActivity extends AppCompatActivity {
         {
             initApp();
         }
+
+        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,0, mLocationListener);
+
+
 
         // CÁC SỰ KIỆN CLICK
         txtTinhThanh = findViewById(R.id.txtTinhThanh);
@@ -77,6 +108,8 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this,SearchActivity.class);
                     intent.putExtra("Keyword",edtTimKiem.getText().toString());
                     intent.putExtra("provinceId",tinhThanhID);
+                    intent.putExtra("long",String.valueOf(currentLocation.getLongitude()));
+                    intent.putExtra("lat",String.valueOf(currentLocation.getLatitude()));
                     intent.putExtra("provinceName",txtTinhThanh.getText().toString());
                     startActivity(intent);
                     return true;
@@ -107,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
             recyclerView.setAdapter(recycleViewAdapter);
         }
     }
-
     private void initApp() {
     }
 

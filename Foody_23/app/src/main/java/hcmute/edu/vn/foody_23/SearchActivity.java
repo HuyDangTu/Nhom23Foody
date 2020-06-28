@@ -39,6 +39,8 @@ public class SearchActivity extends AppCompatActivity {
     public static Database database;
     private static final float LOCATION_REFRESH_DISTANCE = 100 ;
     private static final long LOCATION_REFRESH_TIME = 1;
+    Double lat_;
+    Double long_;
     Location currentLocation;
 
 
@@ -74,13 +76,17 @@ public class SearchActivity extends AppCompatActivity {
         keyWord = intent.getStringExtra("Keyword");
         provinceId = intent.getIntExtra("provinceId",-1);
         txtViewTinhThanh.setText("Địa điểm ở "+intent.getStringExtra("provinceName"));
+        lat_ = Double.valueOf(intent.getStringExtra("lat"));
+        long_ = Double.valueOf(intent.getStringExtra("long"));
+        Location locationA = new Location("");
+        locationA.setLatitude(lat_);
+        locationA.setLongitude(long_);
 
         LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
-                LOCATION_REFRESH_DISTANCE, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,LOCATION_REFRESH_DISTANCE, mLocationListener);
 
         //tìm cua hang theo input từ input từ main activity
-        CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAn(keyWord,provinceId);
+        CuaHangList = DatabaseAccess.getInstance(SearchActivity.this).timKiemQuanAnMacDinh(keyWord,provinceId,SearchActivity.this,locationA);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.ResultRecyclerView);
         SeachResultRecycleViewAdapter recycleViewAdapter = new SeachResultRecycleViewAdapter(SearchActivity.this,CuaHangList);
