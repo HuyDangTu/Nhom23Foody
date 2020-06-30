@@ -53,7 +53,8 @@ import java.util.TimeZone;
 
 public class DetailActivity extends AppCompatActivity implements LocationListener,OnMapReadyCallback {
 
-
+    private static final float LOCATION_REFRESH_DISTANCE = 100 ;
+    private static final long LOCATION_REFRESH_TIME = 1;
     TextView textView;
     TextView txtisOpen;
     TextView txtOpenTime;
@@ -66,7 +67,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
     GoogleMap map;
     List<String> imageList;
     TextView txtWifiName;
-
+    Location currentLocation;
     ///////// LOCATION
     public static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     protected LocationManager locationManager;
@@ -99,6 +100,8 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager ().findFragmentById(R.id.myMaps);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
 
+        LocationManager mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,LOCATION_REFRESH_DISTANCE, mLocationListener);
 
 /// ÁNH XẠ
         txtDiaChi = (TextView) findViewById ( R.id.DiaChi );
@@ -154,7 +157,28 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
             }
         } );
     }
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            //your code here
+            currentLocation = location;
+            Double distance = DatabaseAccess.getInstance ( DetailActivity.this ).DistanceCalculation ( DetailActivity.this,Quanan.getAddress (),currentLocation );
+            txtLat = (TextView) findViewById ( R.id.KhoangCach );
+            txtLat.setText (String.format ( "%.2f",distance)+" km "+"từ vị trí hiện tại");
+        }
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
 
+        }
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
     private void DialogWifi() {
         final Dialog dialog = new Dialog ( this );
         dialog.setContentView ( R.layout.wifi_dialog );
