@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -135,6 +136,7 @@ public class DetailActivity extends AppCompatActivity implements LocationListene
                 startActivity ( intent );
             }
         } );
+
         txtWifi.setOnClickListener ( new View.OnClickListener () {
             @Override
             public void onClick(View v) {

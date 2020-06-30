@@ -15,11 +15,13 @@
 
     <RelativeLayout
 
+
         android:id="@+id/relativeLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/RedFoody"
-        android:gravity="center">
+        >
+
         <TextView
 
             android:id="@+id/txtTenQuan"
